@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafio Matemático!</title>
+    <title>Quiz Educativo!</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -45,69 +45,149 @@
         .answer-btn:active {
             transform: translateY(0);
         }
+        .subject-card {
+            transition: all 0.3s ease;
+        }
+        .subject-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
-<body class="bg-orange-50 min-h-screen flex flex-col">
-    <header class="bg-gradient-to-r from-orange-500 to-red-600 text-white py-6 shadow-lg">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-2 pulse-animation">
-                <i class="fas fa-calculator mr-3"></i>Desafio Matemático!
-            </h1>
-            <p class="text-xl md:text-2xl font-light">Teste suas habilidades matemáticas neste jogo divertido!</p>
-        </div>
-    </header>
-
-    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
-        <div class="bg-yellow-400 text-orange-900 font-bold text-xl px-6 py-3 rounded-full mb-8 shadow-md flex items-center">
-            <i class="fas fa-trophy mr-2"></i>
-            <span>Pontuação: <span id="score">0</span></span>
-        </div>
-
-        <div class="tv-screen w-full max-w-3xl bg-orange-100 border-4 border-orange-300 rounded-xl p-6 mb-8 shadow-xl slide-in">
-            <div class="flex justify-between items-center mb-4">
-                <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                    Pergunta <span id="question-number">1</span>/10
-                </span>
-                <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                    <i class="fas fa-clock mr-1"></i><span id="time">30</span>s
-                </span>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col">
+    <!-- Tela de Seleção de Matérias -->
+    <div id="subject-selection" class="min-h-screen flex flex-col">
+        <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-8 shadow-lg">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 pulse-animation">
+                    <i class="fas fa-graduation-cap mr-3"></i>Quiz Educativo!
+                </h1>
+                <p class="text-xl md:text-2xl font-light">Escolha uma matéria e teste seus conhecimentos!</p>
             </div>
-            <h2 id="question" class="text-2xl md:text-3xl font-bold text-orange-900 mb-6 text-center">
-                Carregando pergunta...
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6" id="answers-container">
-            </div>
-        </div>
+        </header>
 
-        <div id="feedback" class="hidden text-center text-xl font-bold mb-6 fade-in"></div>
+        <main class="flex-grow container mx-auto px-4 py-12 flex flex-col items-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-12 text-center">Escolha sua Matéria</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
+                <!-- Matemática -->
+                <div class="subject-card bg-white rounded-xl p-8 shadow-lg cursor-pointer" onclick="selectSubject('math')">
+                    <div class="text-center">
+                        <div class="bg-orange-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-calculator text-3xl text-orange-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-orange-600 mb-4">Matemática</h3>
+                        <p class="text-gray-600 mb-6">Teste suas habilidades com números, operações e problemas matemáticos!</p>
+                        <div class="bg-orange-500 text-white py-3 px-6 rounded-full font-bold hover:bg-orange-600 transition-colors">
+                            Começar Quiz
+                        </div>
+                    </div>
+                </div>
 
-        <button id="next-btn" class="hidden bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg transition-all duration-300 transform hover:scale-105">
-            Próxima Pergunta <i class="fas fa-arrow-right ml-2"></i>
-        </button>
+                <!-- Ciências -->
+                <div class="subject-card bg-white rounded-xl p-8 shadow-lg cursor-pointer" onclick="selectSubject('science')">
+                    <div class="text-center">
+                        <div class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-flask text-3xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-green-600 mb-4">Ciências</h3>
+                        <p class="text-gray-600 mb-6">Explore o mundo da biologia, química, física e astronomia!</p>
+                        <div class="bg-green-500 text-white py-3 px-6 rounded-full font-bold hover:bg-green-600 transition-colors">
+                            Começar Quiz
+                        </div>
+                    </div>
+                </div>
 
-        <div id="game-over-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 fade-in">
-            <div class="bg-orange-100 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">
-                <h2 class="text-3xl font-bold text-orange-700 mb-4">Fim do Jogo!</h2>
-                <p class="text-xl mb-6">Sua pontuação final: <span id="final-score" class="font-bold">0</span></p>
-                <div class="flex flex-col space-y-4">
-                    <button id="restart-btn" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
-                        <i class="fas fa-redo mr-2"></i>Jogar Novamente
-                    </button>
-                    <button id="share-btn" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
-                        <i class="fas fa-share-alt mr-2"></i>Compartilhar
-                    </button>
+                <!-- Geografia -->
+                <div class="subject-card bg-white rounded-xl p-8 shadow-lg cursor-pointer" onclick="selectSubject('geography')">
+                    <div class="text-center">
+                        <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-globe text-3xl text-blue-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">Geografia</h3>
+                        <p class="text-gray-600 mb-6">Descubra países, capitais, oceanos e características do nosso planeta!</p>
+                        <div class="bg-blue-500 text-white py-3 px-6 rounded-full font-bold hover:bg-blue-600 transition-colors">
+                            Começar Quiz
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
 
-    <footer class="bg-orange-800 text-orange-100 py-6">
-        <div class="container mx-auto px-4 text-center">
-            <div class="flex justify-center space-x-6 mb-4">
-            <p class="text-sm"></p>
-            <p class="text-xs mt-2">© 2025 Todos os direitos reservados | Desenvolvido por Arthur</p>
-        </div>
-    </footer>
+        <footer class="bg-gray-800 text-gray-100 py-6">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-xs">© 2025 Todos os direitos reservados | Desenvolvido por Arthur</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Tela do Quiz -->
+    <div id="quiz-game" class="hidden min-h-screen flex flex-col">
+        <header id="quiz-header" class="bg-gradient-to-r from-orange-500 to-red-600 text-white py-6 shadow-lg">
+            <div class="container mx-auto px-4 text-center">
+                <h1 id="quiz-title" class="text-4xl md:text-5xl font-bold mb-2 pulse-animation">
+                    <i id="quiz-icon" class="fas fa-calculator mr-3"></i><span id="quiz-subject">Desafio Matemático!</span>
+                </h1>
+                <p class="text-xl md:text-2xl font-light">Teste suas habilidades neste jogo divertido!</p>
+                <button onclick="backToSubjects()" class="mt-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-full transition-all">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar às Matérias
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
+            <div class="bg-yellow-400 text-orange-900 font-bold text-xl px-6 py-3 rounded-full mb-8 shadow-md flex items-center">
+                <i class="fas fa-trophy mr-2"></i>
+                <span>Pontuação: <span id="score">0</span></span>
+            </div>
+
+            <div class="tv-screen w-full max-w-3xl bg-orange-100 border-4 border-orange-300 rounded-xl p-6 mb-8 shadow-xl slide-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                        Pergunta <span id="question-number">1</span>/10
+                    </span>
+                    <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                        <i class="fas fa-clock mr-1"></i><span id="time">30</span>s
+                    </span>
+                </div>
+                <h2 id="question" class="text-2xl md:text-3xl font-bold text-orange-900 mb-6 text-center">
+                    Carregando pergunta...
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6" id="answers-container">
+                </div>
+            </div>
+
+            <div id="feedback" class="hidden text-center text-xl font-bold mb-6 fade-in"></div>
+
+            <button id="next-btn" class="hidden bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+                Próxima Pergunta <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+
+            <div id="game-over-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 fade-in">
+                <div class="bg-orange-100 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">
+                    <h2 class="text-3xl font-bold text-orange-700 mb-4">Fim do Jogo!</h2>
+                    <p class="text-xl mb-6">Sua pontuação final: <span id="final-score" class="font-bold">0</span></p>
+                    <div class="flex flex-col space-y-4">
+                        <button id="restart-btn" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
+                            <i class="fas fa-redo mr-2"></i>Jogar Novamente
+                        </button>
+                        <button onclick="backToSubjects()" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Escolher Outra Matéria
+                        </button>
+                        <button id="share-btn" class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
+                            <i class="fas fa-share-alt mr-2"></i>Compartilhar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-orange-800 text-orange-100 py-6">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-xs">© 2025 Todos os direitos reservados | Desenvolvido por Arthur</p>
+            </div>
+        </footer>
+    </div>
 
     <script>
         let currentQuestionIndex = 0;
@@ -115,6 +195,8 @@
         let timer;
         let timeLeft = 30;
         let questionsAnswered = 0;
+        let currentSubject = '';
+        let currentQuestions = [];
         const totalQuestions = 10;
 
         const questionElement = document.getElementById('question');
@@ -129,7 +211,8 @@
         const shareButton = document.getElementById('share-btn');
         const timeElement = document.getElementById('time');
 
-        const questions = [
+        // Perguntas de Matemática
+        const mathQuestions = [
             {
                 question: "Quanto é 15 + 27?",
                 answers: ["32", "42", "37", "45"],
@@ -182,6 +265,163 @@
             }
         ];
 
+        // Perguntas de Ciências
+        const scienceQuestions = [
+            {
+                question: "Qual é o maior planeta do nosso sistema solar?",
+                answers: ["Marte", "Júpiter", "Vênus", "Saturno"],
+                correct: 1
+            },
+            {
+                question: "Qual gás as plantas absorvem da atmosfera?",
+                answers: ["Oxigênio", "Nitrogênio", "Dióxido de Carbono", "Hidrogênio"],
+                correct: 2
+            },
+            {
+                question: "Qual é a fórmula química da água?",
+                answers: ["CO2", "O2", "H2O", "NaCl"],
+                correct: 2
+            },
+            {
+                question: "Qual é o processo pelo qual as plantas produzem seu próprio alimento?",
+                answers: ["Respiração", "Transpiração", "Fotossíntese", "Germinação"],
+                correct: 2
+            },
+            {
+                question: "Qual é o metal mais abundante na crosta terrestre?",
+                answers: ["Ferro", "Cobre", "Alumínio", "Ouro"],
+                correct: 2
+            },
+            {
+                question: "Qual é a unidade básica da vida?",
+                answers: ["Átomo", "Molécula", "Célula", "Tecido"],
+                correct: 2
+            },
+            {
+                question: "Qual planeta é conhecido como o 'Planeta Vermelho'?",
+                answers: ["Júpiter", "Marte", "Vênus", "Mercúrio"],
+                correct: 1
+            },
+            {
+                question: "Qual é o nome da galáxia em que vivemos?",
+                answers: ["Andrômeda", "Triângulo", "Via Láctea", "Cigarro"],
+                correct: 2
+            },
+            {
+                question: "Qual é o ponto de ebulição da água em graus Celsius?",
+                answers: ["0°C", "50°C", "100°C", "200°C"],
+                correct: 2
+            },
+            {
+                question: "Qual cientista formulou a Teoria da Relatividade?",
+                answers: ["Isaac Newton", "Albert Einstein", "Galileu Galilei", "Stephen Hawking"],
+                correct: 1
+            }
+        ];
+
+        // Perguntas de Geografia
+        const geographyQuestions = [
+            {
+                question: "Qual é o maior oceano do mundo?",
+                answers: ["Atlântico", "Índico", "Pacífico", "Ártico"],
+                correct: 2
+            },
+            {
+                question: "Qual é o rio mais longo do mundo?",
+                answers: ["Amazonas", "Nilo", "Yangtzé", "Mississippi"],
+                correct: 1
+            },
+            {
+                question: "Qual país é conhecido como a 'Terra do Sol Nascente'?",
+                answers: ["China", "Coreia do Sul", "Japão", "Tailândia"],
+                correct: 2
+            },
+            {
+                question: "Qual é o deserto mais quente do mundo?",
+                answers: ["Saara", "Atacama", "Gobi", "Kalahari"],
+                correct: 0
+            },
+            {
+                question: "Qual é a capital do Brasil?",
+                answers: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"],
+                correct: 2
+            },
+            {
+                question: "Qual é a montanha mais alta do mundo?",
+                answers: ["K2", "Monte Everest", "Kangchenjunga", "Lhotse"],
+                correct: 1
+            },
+            {
+                question: "Qual continente é o maior em área terrestre?",
+                answers: ["África", "América do Norte", "Ásia", "Europa"],
+                correct: 2
+            },
+            {
+                question: "Qual é o menor país do mundo?",
+                answers: ["Mônaco", "Vaticano", "Nauru", "San Marino"],
+                correct: 1
+            },
+            {
+                question: "Qual é o nome do canal que liga o Oceano Atlântico ao Oceano Pacífico?",
+                answers: ["Canal de Suez", "Canal da Mancha", "Canal do Panamá", "Estreito de Bering"],
+                correct: 2
+            },
+            {
+                question: "Qual é o maior lago de água doce do mundo em volume?",
+                answers: ["Lago Superior", "Lago Vitória", "Lago Baikal", "Lago Michigan"],
+                correct: 2
+            }
+        ];
+
+        function selectSubject(subject) {
+            currentSubject = subject;
+            
+            // Configurar tema baseado na matéria
+            const quizHeader = document.getElementById('quiz-header');
+            const quizIcon = document.getElementById('quiz-icon');
+            const quizSubject = document.getElementById('quiz-subject');
+            
+            switch(subject) {
+                case 'math':
+                    currentQuestions = [...mathQuestions];
+                    quizHeader.className = 'bg-gradient-to-r from-orange-500 to-red-600 text-white py-6 shadow-lg';
+                    quizIcon.className = 'fas fa-calculator mr-3';
+                    quizSubject.textContent = 'Desafio Matemático!';
+                    break;
+                case 'science':
+                    currentQuestions = [...scienceQuestions];
+                    quizHeader.className = 'bg-gradient-to-r from-green-500 to-green-600 text-white py-6 shadow-lg';
+                    quizIcon.className = 'fas fa-flask mr-3';
+                    quizSubject.textContent = 'Desafio de Ciências!';
+                    break;
+                case 'geography':
+                    currentQuestions = [...geographyQuestions];
+                    quizHeader.className = 'bg-gradient-to-r from-blue-500 to-blue-600 text-white py-6 shadow-lg';
+                    quizIcon.className = 'fas fa-globe mr-3';
+                    quizSubject.textContent = 'Desafio de Geografia!';
+                    break;
+            }
+            
+            // Esconder tela de seleção e mostrar quiz
+            document.getElementById('subject-selection').classList.add('hidden');
+            document.getElementById('quiz-game').classList.remove('hidden');
+            
+            // Iniciar o jogo
+            initGame();
+        }
+
+        function backToSubjects() {
+            // Parar timer se estiver rodando
+            clearInterval(timer);
+            
+            // Esconder quiz e mostrar seleção
+            document.getElementById('quiz-game').classList.add('hidden');
+            document.getElementById('subject-selection').classList.remove('hidden');
+            
+            // Esconder modal se estiver visível
+            gameOverModal.classList.add('hidden');
+        }
+
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -191,7 +431,7 @@
         }
 
         function initGame() {
-            shuffleArray(questions);
+            shuffleArray(currentQuestions);
             currentQuestionIndex = 0;
             score = 0;
             questionsAnswered = 0;
@@ -200,7 +440,7 @@
         }
 
         function loadQuestion() {
-            if (currentQuestionIndex >= questions.length) {
+            if (currentQuestionIndex >= currentQuestions.length) {
                 endGame();
                 return;
             }
@@ -210,7 +450,7 @@
             timeElement.textContent = timeLeft;
             startTimer();
 
-            const currentQuestion = questions[currentQuestionIndex];
+            const currentQuestion = currentQuestions[currentQuestionIndex];
             questionElement.textContent = currentQuestion.question;
             questionNumberElement.textContent = currentQuestionIndex + 1;
 
@@ -250,7 +490,7 @@
                 button.classList.add('opacity-50');
             });
             
-            const correctIndex = questions[currentQuestionIndex].correct;
+            const correctIndex = currentQuestions[currentQuestionIndex].correct;
             answerButtons[correctIndex].classList.add('bg-green-200', 'border-green-500');
             
             nextQuestion();
@@ -259,7 +499,7 @@
         function selectAnswer(answerIndex) {
             clearInterval(timer);
             
-            const correctIndex = questions[currentQuestionIndex].correct;
+            const correctIndex = currentQuestions[currentQuestionIndex].correct;
             const answerButtons = document.querySelectorAll('.answer-btn');
             
             answerButtons.forEach(button => {
@@ -276,7 +516,7 @@
             } else {
                 answerButtons[answerIndex].classList.add('bg-red-200', 'border-red-500', 'wrong-answer');
                 answerButtons[correctIndex].classList.add('bg-green-200', 'border-green-500');
-                feedbackElement.textContent = `Incorreto! A resposta correta é: ${questions[currentQuestionIndex].answers[correctIndex]}`;
+                feedbackElement.textContent = `Incorreto! A resposta correta é: ${currentQuestions[currentQuestionIndex].answers[correctIndex]}`;
                 feedbackElement.className = "text-red-600";
             }
             
@@ -309,21 +549,26 @@
         });
 
         shareButton.addEventListener('click', () => {
+            const subjectNames = {
+                'math': 'Matemática',
+                'science': 'Ciências', 
+                'geography': 'Geografia'
+            };
+            
             if (navigator.share) {
                 navigator.share({
-                    title: 'Desafio Matemático',
-                    text: `Eu marquei ${score} pontos no Desafio Matemático! Tente bater minha pontuação!`,
+                    title: 'Quiz Educativo',
+                    text: `Eu marquei ${score} pontos no Quiz de ${subjectNames[currentSubject]}! Tente bater minha pontuação!`,
                     url: window.location.href
                 }).catch(err => {
                     console.log('Erro ao compartilhar:', err);
                 });
             } else {
-                const shareText = `Eu marquei ${score} pontos no Desafio Matemático! Tente bater minha pontuação: ${window.location.href}`;
+                const shareText = `Eu marquei ${score} pontos no Quiz de ${subjectNames[currentSubject]}! Tente bater minha pontuação: ${window.location.href}`;
                 alert('Copie este link para compartilhar:\n\n' + shareText);
             }
         });
-
-        window.addEventListener('DOMContentLoaded', initGame);
     </script>
 </body>
 </html>
+
