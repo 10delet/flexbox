@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Matemático!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        .correct-answer {
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+        }
+        .wrong-answer {
+            box-shadow: 0 0 20px rgba(248, 113, 113, 0.7);
+        }
+        .tv-screen {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 10px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.2);
+        }
+        .answer-btn:hover {
+            transform: translateY(-3px);
+        }
+        .answer-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-orange-50 min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-orange-500 to-red-600 text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2 pulse-animation">
+                <i class="fas fa-calculator mr-3"></i>Desafio Matemático!
+            </h1>
+            <p class="text-xl md:text-2xl font-light">Teste suas habilidades matemáticas neste jogo divertido!</p>
+        </div>
+    </header>
+
+    <!-- Main Game Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
+        <!-- Score Display -->
+        <div class="bg-yellow-400 text-orange-900 font-bold text-xl px-6 py-3 rounded-full mb-8 shadow-md flex items-center">
+            <i class="fas fa-trophy mr-2"></i>
+            <span>Pontuação: <span id="score">0</span></span>
+        </div>
+
+        <!-- Question Card -->
+        <div class="tv-screen w-full max-w-3xl bg-orange-100 border-4 border-orange-300 rounded-xl p-6 mb-8 shadow-xl slide-in">
+            <div class="flex justify-between items-center mb-4">
+                <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                    Pergunta <span id="question-number">1</span>/10
+                </span>
+                <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                    <i class="fas fa-clock mr-1"></i><span id="time">30</span>s
+                </span>
+            </div>
+            <h2 id="question" class="text-2xl md:text-3xl font-bold text-orange-900 mb-6 text-center">
+                Carregando pergunta...
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6" id="answers-container">
+                <!-- Answers will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Feedback Message -->
+        <div id="feedback" class="hidden text-center text-xl font-bold mb-6 fade-in"></div>
+
+        <!-- Next Question Button -->
+        <button id="next-btn" class="hidden bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+            Próxima Pergunta <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+
+        <!-- Game Over Modal -->
+        <div id="game-over-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 fade-in">
+            <div class="bg-orange-100 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">
+                <h2 class="text-3xl font-bold text-orange-700 mb-4">Fim do Jogo!</h2>
+                <p class="text-xl mb-6">Sua pontuação final: <span id="final-score" class="font-bold">0</span></p>
+                <div class="flex flex-col space-y-4">
+                    <button id="restart-btn" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
+                        <i class="fas fa-redo mr-2"></i>Jogar Novamente
+                    </button>
+                    <button id="share-btn" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
+                        <i class="fas fa-share-alt mr-2"></i>Compartilhar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-orange-800 text-orange-100 py-6">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-4">
+            <p class="text-sm">Desenvolvido por arthur</p>
+            <p class="text-xs mt-2">© 2025 Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        // Game variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 30;
+        let questionsAnswered = 0;
+        const totalQuestions = 10;
+
+        // DOM elements
+        const questionElement = document.getElementById('question');
+        const answersContainer = document.getElementById('answers-container');
+        const scoreElement = document.getElementById('score');
+        const questionNumberElement = document.getElementById('question-number');
+        const feedbackElement = document.getElementById('feedback');
+        const nextButton = document.getElementById('next-btn');
+        const gameOverModal = document.getElementById('game-over-modal');
+        const finalScoreElement = document.getElementById('final-score');
+        const restartButton = document.getElementById('restart-btn');
+        const shareButton = document.getElementById('share-btn');
+        const timeElement = document.getElementById('time');
+
+        // Questions data
+        const questions = [
+            {
+                question: "Quanto é 15 + 27?",
+                answers: ["32", "42", "37", "45"],
+                correct: 1
+            },
+            {
+                question: "Qual é o resultado de 8 × 7?",
+                answers: ["48", "56", "64", "72"],
+                correct: 1
+            },
+            {
+                question: "Se um triângulo tem ângulos de 30° e 60°, qual é o terceiro ângulo?",
+                answers: ["60°", "90°", "120°", "180°"],
+                correct: 1
+            },
+            {
+                question: "Qual é a raiz quadrada de 144?",
+                answers: ["10", "12", "14", "16"],
+                correct: 1
+            },
+            {
+                question: "Quanto é 3/4 de 100?",
+                answers: ["25", "50", "75", "100"],
+                correct: 2
+            },
+            {
+                question: "Qual é o próximo número na sequência: 2, 4, 8, 16, ___?",
+                answers: ["20", "24", "32", "64"],
+                correct: 2
+            },
+            {
+                question: "Se x + 5 = 12, qual é o valor de x?",
+                answers: ["5", "6", "7", "8"],
+                correct: 2
+            },
+            {
+                question: "Qual é a área de um quadrado com lado de 5 cm?",
+                answers: ["10 cm²", "20 cm²", "25 cm²", "30 cm²"],
+                correct: 2
+            },
+            {
+                question: "Quanto é 150 ÷ 0.5?",
+                answers: ["75", "150", "300", "450"],
+                correct: 2
+            },
+            {
+                question: "Qual é o resultado de 5² + 12²?",
+                answers: ["169", "144", "194", "289"],
+                correct: 0
+            }
+        ];
+
+        // Shuffle questions array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize game
+        function initGame() {
+            shuffleArray(questions);
+            currentQuestionIndex = 0;
+            score = 0;
+            questionsAnswered = 0;
+            scoreElement.textContent = score;
+            loadQuestion();
+        }
+
+        // Load question
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+
+            // Reset timer
+            clearInterval(timer);
+            timeLeft = 30;
+            timeElement.textContent = timeLeft;
+            startTimer();
+
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            questionNumberElement.textContent = currentQuestionIndex + 1;
+
+            // Clear previous answers and feedback
+            answersContainer.innerHTML = '';
+            feedbackElement.classList.add('hidden');
+            nextButton.classList.add('hidden');
+
+            // Create answer buttons
+            currentQuestion.answers.forEach((answer, index) => {
+                const answerButton = document.createElement('button');
+                answerButton.className = 'answer-btn bg-white hover:bg-orange-200 text-orange-900 font-semibold py-4 px-4 rounded-xl border-2 border-orange-300 transition-all duration-300 shadow-md';
+                answerButton.textContent = answer;
+                answerButton.addEventListener('click', () => selectAnswer(index));
+                answersContainer.appendChild(answerButton);
+            });
+        }
+
+        // Start timer
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                timeElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timeUp();
+                }
+            }, 1000);
+        }
+
+        // Time's up
+        function timeUp() {
+            feedbackElement.textContent = "Tempo esgotado!";
+            feedbackElement.className = "text-red-600";
+            feedbackElement.classList.remove('hidden');
+            
+            // Disable all answer buttons
+            const answerButtons = document.querySelectorAll('.answer-btn');
+            answerButtons.forEach(button => {
+                button.disabled = true;
+                button.classList.add('opacity-50');
+            });
+            
+            // Highlight correct answer
+            const correctIndex = questions[currentQuestionIndex].correct;
+            answerButtons[correctIndex].classList.add('bg-green-200', 'border-green-500');
+            
+            nextQuestion();
+        }
+
+        // Select answer
+        function selectAnswer(answerIndex) {
+            clearInterval(timer);
+            
+            const correctIndex = questions[currentQuestionIndex].correct;
+            const answerButtons = document.querySelectorAll('.answer-btn');
+            
+            // Disable all answer buttons
+            answerButtons.forEach(button => {
+                button.disabled = true;
+                button.classList.add('opacity-50');
+            });
+            
+            if (answerIndex === correctIndex) {
+                // Correct answer
+                answerButtons[answerIndex].classList.add('bg-green-200', 'border-green-500', 'correct-answer');
+                feedbackElement.textContent = "Correto! 🎉";
+                feedbackElement.className = "text-green-600";
+                score += 10;
+                scoreElement.textContent = score;
+            } else {
+                // Wrong answer
+                answerButtons[answerIndex].classList.add('bg-red-200', 'border-red-500', 'wrong-answer');
+                answerButtons[correctIndex].classList.add('bg-green-200', 'border-green-500');
+                feedbackElement.textContent = `Incorreto! A resposta correta é: ${questions[currentQuestionIndex].answers[correctIndex]}`;
+                feedbackElement.className = "text-red-600";
+            }
+            
+            feedbackElement.classList.remove('hidden');
+            questionsAnswered++;
+            nextQuestion();
+        }
+
+        // Move to next question
+        function nextQuestion() {
+            if (questionsAnswered >= totalQuestions) {
+                endGame();
+            } else {
+                nextButton.classList.remove('hidden');
+            }
+        }
+
+        // End game
+        function endGame() {
+            finalScoreElement.textContent = score;
+            gameOverModal.classList.remove('hidden');
+        }
+
+        // Event listeners
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            loadQuestion();
+        });
+
+        restartButton.addEventListener('click', () => {
+            gameOverModal.classList.add('hidden');
+            initGame();
+        });
+
+        shareButton.addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Desafio Matemático',
+                    text: `Eu marquei ${score} pontos no Desafio Matemático! Tente bater minha pontuação!`,
+                    url: window.location.href
+                }).catch(err => {
+                    console.log('Erro ao compartilhar:', err);
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const shareText = `Eu marquei ${score} pontos no Desafio Matemático! Tente bater minha pontuação: ${window.location.href}`;
+                alert('Copie este link para compartilhar:\n\n' + shareText);
+            }
+        });
+
+        // Start the game when page loads
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
