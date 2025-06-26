@@ -3,56 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Educativo!</title>
+    <title>Quiz Educativo Avançado!</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        .slide-in {
-            animation: slideIn 0.5s ease-out;
-        }
-        .correct-answer {
-            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
-        }
-        .wrong-answer {
-            box-shadow: 0 0 20px rgba(248, 113, 113, 0.7);
-        }
-        .tv-screen {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-            border-radius: 10px;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.2);
-        }
-        .answer-btn:hover {
-            transform: translateY(-3px);
-        }
-        .answer-btn:active {
-            transform: translateY(0);
-        }
-        .subject-card {
-            transition: all 0.3s ease;
-        }
-        .subject-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col">
     <!-- Tela de Seleção de Matérias -->
@@ -60,9 +14,19 @@
         <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-8 shadow-lg">
             <div class="container mx-auto px-4 text-center">
                 <h1 class="text-4xl md:text-6xl font-bold mb-4 pulse-animation">
-                    <i class="fas fa-graduation-cap mr-3"></i>Quiz Educativo!
+                    <i class="fas fa-graduation-cap mr-3"></i>Quiz Educativo Avançado!
                 </h1>
-                <p class="text-xl md:text-2xl font-light">Escolha uma matéria e teste seus conhecimentos!</p>
+                <p class="text-xl md:text-2xl font-light">Escolha uma matéria e evolua através dos níveis!</p>
+                <div class="mt-4 flex justify-center items-center space-x-4">
+                    <div class="bg-white bg-opacity-20 px-4 py-2 rounded-full">
+                        <i class="fas fa-trophy mr-2"></i>
+                        <span>Melhor Pontuação: <span id="best-score">0</span></span>
+                    </div>
+                    <div class="bg-white bg-opacity-20 px-4 py-2 rounded-full">
+                        <i class="fas fa-star mr-2"></i>
+                        <span>Nível Máximo: <span id="max-level">1</span></span>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -77,7 +41,14 @@
                             <i class="fas fa-calculator text-3xl text-orange-600"></i>
                         </div>
                         <h3 class="text-2xl font-bold text-orange-600 mb-4">Matemática</h3>
-                        <p class="text-gray-600 mb-6">Teste suas habilidades com números, operações e problemas matemáticos!</p>
+                        <p class="text-gray-600 mb-4">Teste suas habilidades com números, operações e problemas matemáticos!</p>
+                        <div class="mb-4">
+                            <div class="text-sm text-gray-500 mb-2">Progresso:</div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div id="math-progress" class="bg-orange-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Nível <span id="math-level">1</span></div>
+                        </div>
                         <div class="bg-orange-500 text-white py-3 px-6 rounded-full font-bold hover:bg-orange-600 transition-colors">
                             Começar Quiz
                         </div>
@@ -91,7 +62,14 @@
                             <i class="fas fa-flask text-3xl text-green-600"></i>
                         </div>
                         <h3 class="text-2xl font-bold text-green-600 mb-4">Ciências</h3>
-                        <p class="text-gray-600 mb-6">Explore o mundo da biologia, química, física e astronomia!</p>
+                        <p class="text-gray-600 mb-4">Explore o mundo da biologia, química, física e astronomia!</p>
+                        <div class="mb-4">
+                            <div class="text-sm text-gray-500 mb-2">Progresso:</div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div id="science-progress" class="bg-green-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Nível <span id="science-level">1</span></div>
+                        </div>
                         <div class="bg-green-500 text-white py-3 px-6 rounded-full font-bold hover:bg-green-600 transition-colors">
                             Começar Quiz
                         </div>
@@ -105,11 +83,26 @@
                             <i class="fas fa-globe text-3xl text-blue-600"></i>
                         </div>
                         <h3 class="text-2xl font-bold text-blue-600 mb-4">Geografia</h3>
-                        <p class="text-gray-600 mb-6">Descubra países, capitais, oceanos e características do nosso planeta!</p>
+                        <p class="text-gray-600 mb-4">Descubra países, capitais, oceanos e características do nosso planeta!</p>
+                        <div class="mb-4">
+                            <div class="text-sm text-gray-500 mb-2">Progresso:</div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div id="geography-progress" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Nível <span id="geography-level">1</span></div>
+                        </div>
                         <div class="bg-blue-500 text-white py-3 px-6 rounded-full font-bold hover:bg-blue-600 transition-colors">
                             Começar Quiz
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Seção de Conquistas -->
+            <div class="mt-12 w-full max-w-4xl">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Suas Conquistas</h3>
+                <div id="achievements" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Conquistas serão inseridas aqui via JavaScript -->
                 </div>
             </div>
         </main>
@@ -128,10 +121,20 @@
                 <h1 id="quiz-title" class="text-4xl md:text-5xl font-bold mb-2 pulse-animation">
                     <i id="quiz-icon" class="fas fa-calculator mr-3"></i><span id="quiz-subject">Desafio Matemático!</span>
                 </h1>
-                <p class="text-xl md:text-2xl font-light">Teste suas habilidades neste jogo divertido!</p>
-                <button onclick="backToSubjects()" class="mt-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-full transition-all">
-                    <i class="fas fa-arrow-left mr-2"></i>Voltar às Matérias
-                </button>
+                <p class="text-xl md:text-2xl font-light">Nível <span id="current-level">1</span> - <span id="level-description">Iniciante</span></p>
+                <div class="flex justify-center items-center space-x-6 mt-4">
+                    <button onclick="backToSubjects()" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-full transition-all">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar às Matérias
+                    </button>
+                    <div class="bg-white bg-opacity-20 px-4 py-2 rounded-full">
+                        <i class="fas fa-heart mr-2"></i>
+                        <span>Vidas: <span id="lives">3</span></span>
+                    </div>
+                    <div class="bg-white bg-opacity-20 px-4 py-2 rounded-full">
+                        <i class="fas fa-fire mr-2"></i>
+                        <span>Sequência: <span id="streak">0</span></span>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -139,17 +142,30 @@
             <div class="bg-yellow-400 text-orange-900 font-bold text-xl px-6 py-3 rounded-full mb-8 shadow-md flex items-center">
                 <i class="fas fa-trophy mr-2"></i>
                 <span>Pontuação: <span id="score">0</span></span>
+                <span class="ml-4">Multiplicador: x<span id="multiplier">1</span></span>
             </div>
 
             <div class="tv-screen w-full max-w-3xl bg-orange-100 border-4 border-orange-300 rounded-xl p-6 mb-8 shadow-xl slide-in">
                 <div class="flex justify-between items-center mb-4">
                     <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                        Pergunta <span id="question-number">1</span>/10
+                        Pergunta <span id="question-number">1</span>/<span id="total-questions">10</span>
                     </span>
                     <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                         <i class="fas fa-clock mr-1"></i><span id="time">30</span>s
                     </span>
                 </div>
+                
+                <!-- Barra de Progresso do Nível -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                        <span>Progresso do Nível</span>
+                        <span><span id="level-progress-text">0</span>/<span id="level-progress-max">100</span> XP</span>
+                    </div>
+                    <div class="bg-gray-200 rounded-full h-3">
+                        <div id="level-progress-bar" class="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
                 <h2 id="question" class="text-2xl md:text-3xl font-bold text-orange-900 mb-6 text-center">
                     Carregando pergunta...
                 </h2>
@@ -163,10 +179,34 @@
                 Próxima Pergunta <i class="fas fa-arrow-right ml-2"></i>
             </button>
 
+            <!-- Modal de Level Up -->
+            <div id="level-up-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 fade-in">
+                <div class="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl text-center level-up-animation">
+                    <div class="text-6xl mb-4">🎉</div>
+                    <h2 class="text-3xl font-bold text-orange-700 mb-4">LEVEL UP!</h2>
+                    <p class="text-xl mb-2">Parabéns! Você subiu para o</p>
+                    <p class="text-2xl font-bold text-orange-600 mb-4">Nível <span id="new-level">2</span></p>
+                    <p class="text-lg mb-6"><span id="new-level-description">Intermediário</span></p>
+                    <button id="continue-btn" class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
+                        <i class="fas fa-play mr-2"></i>Continuar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal de Game Over -->
             <div id="game-over-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 fade-in">
                 <div class="bg-orange-100 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">
-                    <h2 class="text-3xl font-bold text-orange-700 mb-4">Fim do Jogo!</h2>
-                    <p class="text-xl mb-6">Sua pontuação final: <span id="final-score" class="font-bold">0</span></p>
+                    <div id="game-over-icon" class="text-6xl mb-4">😔</div>
+                    <h2 id="game-over-title" class="text-3xl font-bold text-orange-700 mb-4">Fim do Jogo!</h2>
+                    <div class="mb-6">
+                        <p class="text-xl mb-2">Pontuação Final: <span id="final-score" class="font-bold">0</span></p>
+                        <p class="text-lg mb-2">Nível Alcançado: <span id="final-level" class="font-bold">1</span></p>
+                        <p class="text-lg">Melhor Sequência: <span id="final-streak" class="font-bold">0</span></p>
+                    </div>
+                    <div id="new-achievements" class="hidden mb-6">
+                        <h3 class="text-lg font-bold text-green-600 mb-2">🏆 Novas Conquistas!</h3>
+                        <div id="new-achievements-list" class="text-sm"></div>
+                    </div>
                     <div class="flex flex-col space-y-4">
                         <button id="restart-btn" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300">
                             <i class="fas fa-redo mr-2"></i>Jogar Novamente
@@ -189,386 +229,11 @@
         </footer>
     </div>
 
-    <script>
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let timer;
-        let timeLeft = 30;
-        let questionsAnswered = 0;
-        let currentSubject = '';
-        let currentQuestions = [];
-        const totalQuestions = 10;
+    <!-- Partículas de Celebração -->
+    <div id="celebration-particles" class="hidden fixed inset-0 pointer-events-none z-40">
+        <!-- Partículas serão inseridas aqui via JavaScript -->
+    </div>
 
-        const questionElement = document.getElementById('question');
-        const answersContainer = document.getElementById('answers-container');
-        const scoreElement = document.getElementById('score');
-        const questionNumberElement = document.getElementById('question-number');
-        const feedbackElement = document.getElementById('feedback');
-        const nextButton = document.getElementById('next-btn');
-        const gameOverModal = document.getElementById('game-over-modal');
-        const finalScoreElement = document.getElementById('final-score');
-        const restartButton = document.getElementById('restart-btn');
-        const shareButton = document.getElementById('share-btn');
-        const timeElement = document.getElementById('time');
-
-        // Perguntas de Matemática
-        const mathQuestions = [
-            {
-                question: "Quanto é 15 + 27?",
-                answers: ["32", "42", "37", "45"],
-                correct: 1
-            },
-            {
-                question: "Qual é o resultado de 8 × 7?",
-                answers: ["48", "56", "64", "72"],
-                correct: 1
-            },
-            {
-                question: "Se um triângulo tem ângulos de 30° e 60°, qual é o terceiro ângulo?",
-                answers: ["60°", "90°", "120°", "180°"],
-                correct: 1
-            },
-            {
-                question: "Qual é a raiz quadrada de 144?",
-                answers: ["10", "12", "14", "16"],
-                correct: 1
-            },
-            {
-                question: "Quanto é 3/4 de 100?",
-                answers: ["25", "50", "75", "100"],
-                correct: 2
-            },
-            {
-                question: "Qual é o próximo número na sequência: 2, 4, 8, 16, ___?",
-                answers: ["20", "24", "32", "64"],
-                correct: 2
-            },
-            {
-                question: "Se x + 5 = 12, qual é o valor de x?",
-                answers: ["5", "6", "7", "8"],
-                correct: 2
-            },
-            {
-                question: "Qual é a área de um quadrado com lado de 5 cm?",
-                answers: ["10 cm²", "20 cm²", "25 cm²", "30 cm²"],
-                correct: 2
-            },
-            {
-                question: "Quanto é 150 ÷ 0.5?",
-                answers: ["75", "150", "300", "450"],
-                correct: 2
-            },
-            {
-                question: "Qual é o resultado de 5² + 12²?",
-                answers: ["169", "144", "194", "289"],
-                correct: 0
-            }
-        ];
-
-        // Perguntas de Ciências
-        const scienceQuestions = [
-            {
-                question: "Qual é o maior planeta do nosso sistema solar?",
-                answers: ["Marte", "Júpiter", "Vênus", "Saturno"],
-                correct: 1
-            },
-            {
-                question: "Qual gás as plantas absorvem da atmosfera?",
-                answers: ["Oxigênio", "Nitrogênio", "Dióxido de Carbono", "Hidrogênio"],
-                correct: 2
-            },
-            {
-                question: "Qual é a fórmula química da água?",
-                answers: ["CO2", "O2", "H2O", "NaCl"],
-                correct: 2
-            },
-            {
-                question: "Qual é o processo pelo qual as plantas produzem seu próprio alimento?",
-                answers: ["Respiração", "Transpiração", "Fotossíntese", "Germinação"],
-                correct: 2
-            },
-            {
-                question: "Qual é o metal mais abundante na crosta terrestre?",
-                answers: ["Ferro", "Cobre", "Alumínio", "Ouro"],
-                correct: 2
-            },
-            {
-                question: "Qual é a unidade básica da vida?",
-                answers: ["Átomo", "Molécula", "Célula", "Tecido"],
-                correct: 2
-            },
-            {
-                question: "Qual planeta é conhecido como o 'Planeta Vermelho'?",
-                answers: ["Júpiter", "Marte", "Vênus", "Mercúrio"],
-                correct: 1
-            },
-            {
-                question: "Qual é o nome da galáxia em que vivemos?",
-                answers: ["Andrômeda", "Triângulo", "Via Láctea", "Cigarro"],
-                correct: 2
-            },
-            {
-                question: "Qual é o ponto de ebulição da água em graus Celsius?",
-                answers: ["0°C", "50°C", "100°C", "200°C"],
-                correct: 2
-            },
-            {
-                question: "Qual cientista formulou a Teoria da Relatividade?",
-                answers: ["Isaac Newton", "Albert Einstein", "Galileu Galilei", "Stephen Hawking"],
-                correct: 1
-            }
-        ];
-
-        // Perguntas de Geografia
-        const geographyQuestions = [
-            {
-                question: "Qual é o maior oceano do mundo?",
-                answers: ["Atlântico", "Índico", "Pacífico", "Ártico"],
-                correct: 2
-            },
-            {
-                question: "Qual é o rio mais longo do mundo?",
-                answers: ["Amazonas", "Nilo", "Yangtzé", "Mississippi"],
-                correct: 1
-            },
-            {
-                question: "Qual país é conhecido como a 'Terra do Sol Nascente'?",
-                answers: ["China", "Coreia do Sul", "Japão", "Tailândia"],
-                correct: 2
-            },
-            {
-                question: "Qual é o deserto mais quente do mundo?",
-                answers: ["Saara", "Atacama", "Gobi", "Kalahari"],
-                correct: 0
-            },
-            {
-                question: "Qual é a capital do Brasil?",
-                answers: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"],
-                correct: 2
-            },
-            {
-                question: "Qual é a montanha mais alta do mundo?",
-                answers: ["K2", "Monte Everest", "Kangchenjunga", "Lhotse"],
-                correct: 1
-            },
-            {
-                question: "Qual continente é o maior em área terrestre?",
-                answers: ["África", "América do Norte", "Ásia", "Europa"],
-                correct: 2
-            },
-            {
-                question: "Qual é o menor país do mundo?",
-                answers: ["Mônaco", "Vaticano", "Nauru", "San Marino"],
-                correct: 1
-            },
-            {
-                question: "Qual é o nome do canal que liga o Oceano Atlântico ao Oceano Pacífico?",
-                answers: ["Canal de Suez", "Canal da Mancha", "Canal do Panamá", "Estreito de Bering"],
-                correct: 2
-            },
-            {
-                question: "Qual é o maior lago de água doce do mundo em volume?",
-                answers: ["Lago Superior", "Lago Vitória", "Lago Baikal", "Lago Michigan"],
-                correct: 2
-            }
-        ];
-
-        function selectSubject(subject) {
-            currentSubject = subject;
-            
-            // Configurar tema baseado na matéria
-            const quizHeader = document.getElementById('quiz-header');
-            const quizIcon = document.getElementById('quiz-icon');
-            const quizSubject = document.getElementById('quiz-subject');
-            
-            switch(subject) {
-                case 'math':
-                    currentQuestions = [...mathQuestions];
-                    quizHeader.className = 'bg-gradient-to-r from-orange-500 to-red-600 text-white py-6 shadow-lg';
-                    quizIcon.className = 'fas fa-calculator mr-3';
-                    quizSubject.textContent = 'Desafio Matemático!';
-                    break;
-                case 'science':
-                    currentQuestions = [...scienceQuestions];
-                    quizHeader.className = 'bg-gradient-to-r from-green-500 to-green-600 text-white py-6 shadow-lg';
-                    quizIcon.className = 'fas fa-flask mr-3';
-                    quizSubject.textContent = 'Desafio de Ciências!';
-                    break;
-                case 'geography':
-                    currentQuestions = [...geographyQuestions];
-                    quizHeader.className = 'bg-gradient-to-r from-blue-500 to-blue-600 text-white py-6 shadow-lg';
-                    quizIcon.className = 'fas fa-globe mr-3';
-                    quizSubject.textContent = 'Desafio de Geografia!';
-                    break;
-            }
-            
-            // Esconder tela de seleção e mostrar quiz
-            document.getElementById('subject-selection').classList.add('hidden');
-            document.getElementById('quiz-game').classList.remove('hidden');
-            
-            // Iniciar o jogo
-            initGame();
-        }
-
-        function backToSubjects() {
-            // Parar timer se estiver rodando
-            clearInterval(timer);
-            
-            // Esconder quiz e mostrar seleção
-            document.getElementById('quiz-game').classList.add('hidden');
-            document.getElementById('subject-selection').classList.remove('hidden');
-            
-            // Esconder modal se estiver visível
-            gameOverModal.classList.add('hidden');
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function initGame() {
-            shuffleArray(currentQuestions);
-            currentQuestionIndex = 0;
-            score = 0;
-            questionsAnswered = 0;
-            scoreElement.textContent = score;
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            if (currentQuestionIndex >= currentQuestions.length) {
-                endGame();
-                return;
-            }
-
-            clearInterval(timer);
-            timeLeft = 30;
-            timeElement.textContent = timeLeft;
-            startTimer();
-
-            const currentQuestion = currentQuestions[currentQuestionIndex];
-            questionElement.textContent = currentQuestion.question;
-            questionNumberElement.textContent = currentQuestionIndex + 1;
-
-            answersContainer.innerHTML = '';
-            feedbackElement.classList.add('hidden');
-            nextButton.classList.add('hidden');
-
-            currentQuestion.answers.forEach((answer, index) => {
-                const answerButton = document.createElement('button');
-                answerButton.className = 'answer-btn bg-white hover:bg-orange-200 text-orange-900 font-semibold py-4 px-4 rounded-xl border-2 border-orange-300 transition-all duration-300 shadow-md';
-                answerButton.textContent = answer;
-                answerButton.addEventListener('click', () => selectAnswer(index));
-                answersContainer.appendChild(answerButton);
-            });
-        }
-
-        function startTimer() {
-            timer = setInterval(() => {
-                timeLeft--;
-                timeElement.textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    timeUp();
-                }
-            }, 1000);
-        }
-
-        function timeUp() {
-            feedbackElement.textContent = "Tempo esgotado!";
-            feedbackElement.className = "text-red-600";
-            feedbackElement.classList.remove('hidden');
-            
-            const answerButtons = document.querySelectorAll('.answer-btn');
-            answerButtons.forEach(button => {
-                button.disabled = true;
-                button.classList.add('opacity-50');
-            });
-            
-            const correctIndex = currentQuestions[currentQuestionIndex].correct;
-            answerButtons[correctIndex].classList.add('bg-green-200', 'border-green-500');
-            
-            nextQuestion();
-        }
-
-        function selectAnswer(answerIndex) {
-            clearInterval(timer);
-            
-            const correctIndex = currentQuestions[currentQuestionIndex].correct;
-            const answerButtons = document.querySelectorAll('.answer-btn');
-            
-            answerButtons.forEach(button => {
-                button.disabled = true;
-                button.classList.add('opacity-50');
-            });
-            
-            if (answerIndex === correctIndex) {
-                answerButtons[answerIndex].classList.add('bg-green-200', 'border-green-500', 'correct-answer');
-                feedbackElement.textContent = "Correto! 🎉";
-                feedbackElement.className = "text-green-600";
-                score += 10;
-                scoreElement.textContent = score;
-            } else {
-                answerButtons[answerIndex].classList.add('bg-red-200', 'border-red-500', 'wrong-answer');
-                answerButtons[correctIndex].classList.add('bg-green-200', 'border-green-500');
-                feedbackElement.textContent = `Incorreto! A resposta correta é: ${currentQuestions[currentQuestionIndex].answers[correctIndex]}`;
-                feedbackElement.className = "text-red-600";
-            }
-            
-            feedbackElement.classList.remove('hidden');
-            questionsAnswered++;
-            nextQuestion();
-        }
-
-        function nextQuestion() {
-            if (questionsAnswered >= totalQuestions) {
-                endGame();
-            } else {
-                nextButton.classList.remove('hidden');
-            }
-        }
-
-        function endGame() {
-            finalScoreElement.textContent = score;
-            gameOverModal.classList.remove('hidden');
-        }
-
-        nextButton.addEventListener('click', () => {
-            currentQuestionIndex++;
-            loadQuestion();
-        });
-
-        restartButton.addEventListener('click', () => {
-            gameOverModal.classList.add('hidden');
-            initGame();
-        });
-
-        shareButton.addEventListener('click', () => {
-            const subjectNames = {
-                'math': 'Matemática',
-                'science': 'Ciências', 
-                'geography': 'Geografia'
-            };
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Quiz Educativo',
-                    text: `Eu marquei ${score} pontos no Quiz de ${subjectNames[currentSubject]}! Tente bater minha pontuação!`,
-                    url: window.location.href
-                }).catch(err => {
-                    console.log('Erro ao compartilhar:', err);
-                });
-            } else {
-                const shareText = `Eu marquei ${score} pontos no Quiz de ${subjectNames[currentSubject]}! Tente bater minha pontuação: ${window.location.href}`;
-                alert('Copie este link para compartilhar:\n\n' + shareText);
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
-
