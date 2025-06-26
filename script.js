@@ -1006,7 +1006,6 @@ function animateProgressBars() {
   })
 }
 
-// Inicialização final
 console.log("🎓 Quiz Educativo Avançado carregado com sucesso!")
 console.log("📚 Matérias disponíveis:", Object.keys(questionDatabase))
 console.log("🏆 Sistema de conquistas ativo")

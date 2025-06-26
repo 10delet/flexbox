@@ -275,7 +275,6 @@
   }
 }
 
-/* Responsividade aprimorada */
 @media (max-width: 768px) {
   .tv-screen {
     padding: 1rem;
@@ -311,7 +310,6 @@
   }
 }
 
-/* Efeitos de loading */
 .loading-spinner {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #3498db;
@@ -331,7 +329,6 @@
   }
 }
 
-/* Efeitos de hover melhorados */
 .hover-glow:hover {
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
   transition: box-shadow 0.3s ease;
@@ -342,7 +339,6 @@
   transition: transform 0.3s ease;
 }
 
-/* Gradientes animados */
 .animated-gradient {
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
@@ -361,7 +357,6 @@
   }
 }
 
-/* Estilos do Footer Melhorado */
 .footer-stat-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
   backdrop-filter: blur(10px);
@@ -410,7 +405,6 @@
   transform: translateY(-2px);
 }
 
-/* Animação das barras de progresso */
 .progress-bar-animated {
   position: relative;
   overflow: hidden;
@@ -436,7 +430,6 @@
   }
 }
 
-/* Melhorias responsivas para o footer */
 @media (max-width: 768px) {
   .footer-stats {
     grid-template-columns: repeat(2, 1fr);
@@ -452,7 +445,6 @@
   }
 }
 
-/* Efeito de hover nas matérias */
 .subject-progress-container {
   position: relative;
 }
@@ -461,7 +453,6 @@
   animation-duration: 1s;
 }
 
-/* Indicador de nível nas barras */
 .level-indicator {
   position: absolute;
   right: 0;
