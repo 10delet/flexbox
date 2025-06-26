@@ -11,7 +11,8 @@ let lives = 3
 let streak = 0
 let multiplier = 1
 let levelProgress = 0
-let levelProgressMax = 100
+const questionsPerLevel = 5 // Exatamente 5 questões por nível
+const maxLevel = 10 // Nível máximo é 10
 
 // Elementos DOM
 const questionElement = document.getElementById("question")
@@ -345,6 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadProgress()
   updateProgressDisplay()
   renderAchievements()
+  setTimeout(animateProgressBars, 500)
 })
 
 // Funções de progresso e salvamento
@@ -383,8 +385,24 @@ function updateProgressDisplay() {
   const subjects = ["math", "science", "geography"]
   subjects.forEach((subject) => {
     const level = Number.parseInt(document.getElementById(`${subject}-level`).textContent)
-    const progress = Math.min((level - 1) * 20, 100)
+    // Progresso baseado no nível atual (0-100% para níveis 1-10)
+    const progress = Math.min(((level - 1) / (maxLevel - 1)) * 100, 100)
     document.getElementById(`${subject}-progress`).style.width = `${progress}%`
+
+    // Mudar cor da barra baseado no progresso
+    const progressBar = document.getElementById(`${subject}-progress`)
+    if (level >= 8) {
+      progressBar.className = `bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500`
+    } else if (level >= 5) {
+      progressBar.className = `bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500`
+    } else {
+      const colors = {
+        math: "bg-orange-500",
+        science: "bg-green-500",
+        geography: "bg-blue-500",
+      }
+      progressBar.className = `${colors[subject]} h-2 rounded-full transition-all duration-500`
+    }
   })
 }
 
@@ -457,15 +475,17 @@ function initGame() {
   streak = 0
   multiplier = 1
   levelProgress = 0
-  levelProgressMax = 100
 
-  // Preparar perguntas do nível atual
+  // Preparar exatamente 5 perguntas do nível atual
   const levelQuestions = questionDatabase[currentSubject][currentLevel] || questionDatabase[currentSubject][1]
-  currentQuestions = shuffleArray(levelQuestions)
+  currentQuestions = shuffleArray(levelQuestions).slice(0, questionsPerLevel)
 
   // Atualizar interface
   updateGameUI()
   loadQuestion()
+
+  // Atualizar footer do quiz
+  updateQuizFooter()
 }
 
 function updateGameUI() {
@@ -475,17 +495,20 @@ function updateGameUI() {
   multiplierElement.textContent = multiplier
   currentLevelElement.textContent = currentLevel
   levelDescriptionElement.textContent = levelDescriptions[currentLevel] || "Desconhecido"
-  totalQuestionsElement.textContent = currentQuestions.length
-  levelProgressText.textContent = levelProgress
-  levelProgressMaxElement.textContent = levelProgressMax
+  totalQuestionsElement.textContent = questionsPerLevel
+  levelProgressText.textContent = currentQuestionIndex
+  levelProgressMaxElement.textContent = questionsPerLevel
 
-  // Atualizar barra de progresso do nível
-  const progressPercent = (levelProgress / levelProgressMax) * 100
+  // Atualizar barra de progresso do nível atual
+  const progressPercent = (currentQuestionIndex / questionsPerLevel) * 100
   levelProgressBar.style.width = `${progressPercent}%`
+
+  // Atualizar footer do quiz
+  updateQuizFooter()
 }
 
 function loadQuestion() {
-  if (currentQuestionIndex >= currentQuestions.length) {
+  if (currentQuestionIndex >= questionsPerLevel) {
     // Nível completo - verificar se pode subir de nível
     checkLevelUp()
     return
@@ -638,15 +661,18 @@ function nextQuestion() {
 }
 
 function checkLevelUp() {
-  if (levelProgress >= levelProgressMax && lives > 0) {
+  if (lives > 0 && currentLevel < maxLevel) {
     // Subir de nível
     currentLevel++
-    levelProgress = 0
-    levelProgressMax += 20 // Aumenta a dificuldade
 
     // Verificar conquistas de nível
     if (currentLevel === 5) checkAchievement("level5")
     if (currentLevel === 10) checkAchievement("level10")
+
+    // Atualizar nível da matéria na tela principal
+    const subjectLevelElement = document.getElementById(`${currentSubject}-level`)
+    subjectLevelElement.textContent = currentLevel
+    updateProgressDisplay()
 
     // Mostrar modal de level up
     showLevelUpModal()
@@ -670,15 +696,15 @@ function continueToNextLevel() {
 
   // Preparar perguntas do novo nível
   const levelQuestions = questionDatabase[currentSubject][currentLevel]
-  if (levelQuestions) {
-    currentQuestions = shuffleArray(levelQuestions)
+  if (levelQuestions && currentLevel <= maxLevel) {
+    currentQuestions = shuffleArray(levelQuestions).slice(0, questionsPerLevel)
     currentQuestionIndex = 0
     questionsAnswered = 0
     lives = Math.min(lives + 1, 5) // Recuperar uma vida
     updateGameUI()
     loadQuestion()
   } else {
-    // Não há mais níveis, terminar jogo
+    // Chegou ao nível máximo ou não há mais perguntas
     endGame()
   }
 }
@@ -944,6 +970,39 @@ if (window.location.hostname !== "localhost" && window.location.hostname !== "12
   document.addEventListener("contextmenu", (e) => {
     e.preventDefault()
     return false
+  })
+}
+
+// Função para atualizar footer do quiz
+function updateQuizFooter() {
+  const footerLevel = document.getElementById("footer-current-level")
+  const footerSubject = document.getElementById("footer-current-subject")
+
+  if (footerLevel) footerLevel.textContent = currentLevel
+  if (footerSubject) {
+    const subjectNames = {
+      math: "Matemática",
+      science: "Ciências",
+      geography: "Geografia",
+    }
+    footerSubject.textContent = subjectNames[currentSubject] || "Matéria"
+  }
+}
+
+// Função para animar as barras de progresso
+function animateProgressBars() {
+  const subjects = ["math", "science", "geography"]
+  subjects.forEach((subject, index) => {
+    setTimeout(() => {
+      const progressBar = document.getElementById(`${subject}-progress`)
+      progressBar.style.transform = "scaleX(0)"
+      progressBar.style.transformOrigin = "left"
+
+      setTimeout(() => {
+        progressBar.style.transform = "scaleX(1)"
+        progressBar.style.transition = "transform 1s ease-out"
+      }, 100)
+    }, index * 200)
   })
 }
 
