@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col">
-    <!-- Tela de Seleção de Matérias -->
     <div id="subject-selection" class="min-h-screen flex flex-col">
         <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-8 shadow-lg">
             <div class="container mx-auto px-4 text-center">
@@ -34,7 +33,6 @@
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-12 text-center">Escolha sua Matéria</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
-                <!-- Matemática -->
                 <div class="subject-card bg-white rounded-xl p-8 shadow-lg cursor-pointer" onclick="selectSubject('math')">
                     <div class="text-center">
                         <div class="bg-orange-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -55,7 +53,6 @@
                     </div>
                 </div>
 
-                <!-- Ciências -->
                 <div class="subject-card bg-white rounded-xl p-8 shadow-lg cursor-pointer" onclick="selectSubject('science')">
                     <div class="text-center">
                         <div class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -76,7 +73,6 @@
                     </div>
                 </div>
 
-                <!-- Geografia -->
                 <div class="subject-card bg-white rounded-xl p-8 shadow-lg cursor-pointer" onclick="selectSubject('geography')">
                     <div class="text-center">
                         <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -98,11 +94,9 @@
                 </div>
             </div>
 
-            <!-- Seção de Conquistas -->
             <div class="mt-12 w-full max-w-4xl">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Suas Conquistas</h3>
                 <div id="achievements" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Conquistas serão inseridas aqui via JavaScript -->
                 </div>
             </div>
         </main>
@@ -110,7 +104,6 @@
         <footer class="bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white py-12">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Logo e Descrição -->
             <div class="md:col-span-2">
                 <div class="flex items-center mb-4">
                     <i class="fas fa-graduation-cap text-3xl text-blue-400 mr-3"></i>
@@ -126,7 +119,7 @@
                 </div>
             </div>
             
-            <!-- Matérias -->
+
             <div>
                 <h4 class="text-lg font-bold mb-4 text-blue-400">Matérias</h4>
                 <ul class="space-y-2">
@@ -142,7 +135,6 @@
                 </ul>
             </div>
             
-            <!-- Recursos -->
             <div>
                 <h4 class="text-lg font-bold mb-4 text-blue-400">Recursos</h4>
                 <ul class="space-y-2">
@@ -162,7 +154,6 @@
             </div>
         </div>
         
-        <!-- Estatísticas -->
         <div class="border-t border-gray-700 mt-8 pt-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-4">
@@ -184,7 +175,6 @@
             </div>
         </div>
         
-        <!-- Copyright -->
         <div class="border-t border-gray-700 mt-8 pt-6 text-center">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <p class="text-gray-400 text-sm mb-4 md:mb-0">
@@ -207,7 +197,6 @@
 </footer>
     </div>
 
-    <!-- Tela do Quiz -->
     <div id="quiz-game" class="hidden min-h-screen flex flex-col">
         <header id="quiz-header" class="bg-gradient-to-r from-orange-500 to-red-600 text-white py-6 shadow-lg">
             <div class="container mx-auto px-4 text-center">
@@ -248,7 +237,6 @@
                     </span>
                 </div>
                 
-                <!-- Barra de Progresso do Nível -->
                 <div class="mb-4">
                     <div class="flex justify-between text-sm text-gray-600 mb-1">
                         <span>Progresso do Nível</span>
@@ -272,7 +260,6 @@
                 Próxima Pergunta <i class="fas fa-arrow-right ml-2"></i>
             </button>
 
-            <!-- Modal de Level Up -->
             <div id="level-up-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 fade-in">
                 <div class="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl text-center level-up-animation">
                     <div class="text-6xl mb-4">🎉</div>
@@ -286,7 +273,6 @@
                 </div>
             </div>
 
-            <!-- Modal de Game Over -->
             <div id="game-over-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 fade-in">
                 <div class="bg-orange-100 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">
                     <div id="game-over-icon" class="text-6xl mb-4">😔</div>
@@ -334,9 +320,7 @@
 </footer>
     </div>
 
-    <!-- Partículas de Celebração -->
     <div id="celebration-particles" class="hidden fixed inset-0 pointer-events-none z-40">
-        <!-- Partículas serão inseridas aqui via JavaScript -->
     </div>
 
     <script src="script.js"></script>

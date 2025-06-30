@@ -1,4 +1,3 @@
-// Variáveis globais do jogo
 let currentQuestionIndex = 0
 let score = 0
 let timer
@@ -11,10 +10,9 @@ let lives = 3
 let streak = 0
 let multiplier = 1
 let levelProgress = 0
-const questionsPerLevel = 5 // Exatamente 5 questões por nível
-const maxLevel = 10 // Nível máximo é 10
+const questionsPerLevel = 5 
+const maxLevel = 10 
 
-// Elementos DOM
 const questionElement = document.getElementById("question")
 const answersContainer = document.getElementById("answers-container")
 const scoreElement = document.getElementById("score")
@@ -38,7 +36,6 @@ const levelProgressMaxElement = document.getElementById("level-progress-max")
 const totalQuestionsElement = document.getElementById("total-questions")
 const continueBtn = document.getElementById("continue-btn")
 
-// Sistema de conquistas
 const achievements = {
   firstWin: { name: "Primeira Vitória", description: "Acerte sua primeira pergunta", icon: "🎯", unlocked: false },
   streak5: { name: "Sequência de 5", description: "Acerte 5 perguntas seguidas", icon: "🔥", unlocked: false },
@@ -56,7 +53,6 @@ const achievements = {
   master: { name: "Mestre", description: "Alcance 5000 pontos", icon: "👑", unlocked: false },
 }
 
-// Descrições dos níveis
 const levelDescriptions = {
   1: "Iniciante",
   2: "Novato",
@@ -70,7 +66,6 @@ const levelDescriptions = {
   10: "Lendário",
 }
 
-// Perguntas organizadas por matéria e nível
 const questionDatabase = {
   math: {
     1: [
@@ -341,7 +336,6 @@ const questionDatabase = {
   },
 }
 
-// Inicialização
 document.addEventListener("DOMContentLoaded", () => {
   loadProgress()
   updateProgressDisplay()
@@ -349,7 +343,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(animateProgressBars, 500)
 })
 
-// Funções de progresso e salvamento
 function saveProgress() {
   const progress = {
     achievements: achievements,
@@ -381,15 +374,12 @@ function loadProgress() {
 }
 
 function updateProgressDisplay() {
-  // Atualizar barras de progresso das matérias
   const subjects = ["math", "science", "geography"]
   subjects.forEach((subject) => {
     const level = Number.parseInt(document.getElementById(`${subject}-level`).textContent)
-    // Progresso baseado no nível atual (0-100% para níveis 1-10)
     const progress = Math.min(((level - 1) / (maxLevel - 1)) * 100, 100)
     document.getElementById(`${subject}-progress`).style.width = `${progress}%`
 
-    // Mudar cor da barra baseado no progresso
     const progressBar = document.getElementById(`${subject}-progress`)
     if (level >= 8) {
       progressBar.className = `bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500`
@@ -406,12 +396,10 @@ function updateProgressDisplay() {
   })
 }
 
-// Função para selecionar matéria
 function selectSubject(subject) {
   currentSubject = subject
   currentLevel = Number.parseInt(document.getElementById(`${subject}-level`).textContent)
 
-  // Configurar tema baseado na matéria
   const quizHeader = document.getElementById("quiz-header")
   const quizIcon = document.getElementById("quiz-icon")
   const quizSubject = document.getElementById("quiz-subject")
@@ -439,11 +427,9 @@ function selectSubject(subject) {
   quizIcon.className = `${theme.icon} mr-3`
   quizSubject.textContent = theme.title
 
-  // Esconder tela de seleção e mostrar quiz
   document.getElementById("subject-selection").classList.add("hidden")
   document.getElementById("quiz-game").classList.remove("hidden")
 
-  // Iniciar o jogo
   initGame()
 }
 
@@ -455,7 +441,6 @@ function backToSubjects() {
   levelUpModal.classList.add("hidden")
 }
 
-// Função para embaralhar array
 function shuffleArray(array) {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -465,9 +450,7 @@ function shuffleArray(array) {
   return shuffled
 }
 
-// Inicializar jogo
 function initGame() {
-  // Resetar variáveis
   currentQuestionIndex = 0
   score = 0
   questionsAnswered = 0
@@ -476,15 +459,12 @@ function initGame() {
   multiplier = 1
   levelProgress = 0
 
-  // Preparar exatamente 5 perguntas do nível atual
   const levelQuestions = questionDatabase[currentSubject][currentLevel] || questionDatabase[currentSubject][1]
   currentQuestions = shuffleArray(levelQuestions).slice(0, questionsPerLevel)
 
-  // Atualizar interface
   updateGameUI()
   loadQuestion()
 
-  // Atualizar footer do quiz
   updateQuizFooter()
 }
 
@@ -499,23 +479,20 @@ function updateGameUI() {
   levelProgressText.textContent = currentQuestionIndex
   levelProgressMaxElement.textContent = questionsPerLevel
 
-  // Atualizar barra de progresso do nível atual
   const progressPercent = (currentQuestionIndex / questionsPerLevel) * 100
   levelProgressBar.style.width = `${progressPercent}%`
 
-  // Atualizar footer do quiz
   updateQuizFooter()
 }
 
 function loadQuestion() {
   if (currentQuestionIndex >= questionsPerLevel) {
-    // Nível completo - verificar se pode subir de nível
     checkLevelUp()
     return
   }
 
   clearInterval(timer)
-  timeLeft = Math.max(15, 30 - currentLevel * 2) // Tempo diminui com o nível
+  timeLeft = Math.max(15, 30 - currentLevel * 2) 
   timeElement.textContent = timeLeft
   startTimer()
 
@@ -527,7 +504,6 @@ function loadQuestion() {
   feedbackElement.classList.add("hidden")
   nextButton.classList.add("hidden")
 
-  // Criar botões de resposta com animação
   currentQuestion.answers.forEach((answer, index) => {
     const answerButton = document.createElement("button")
     answerButton.className =
@@ -545,7 +521,6 @@ function startTimer() {
     timeLeft--
     timeElement.textContent = timeLeft
 
-    // Mudar cor do timer quando o tempo está acabando
     if (timeLeft <= 5) {
       timeElement.parentElement.classList.add("animate-pulse")
     }
@@ -572,7 +547,6 @@ function timeUp() {
   const correctIndex = currentQuestions[currentQuestionIndex].correct
   answerButtons[correctIndex].classList.add("bg-green-200", "border-green-500")
 
-  // Perder vida e resetar streak
   loseLife()
   streak = 0
   multiplier = 1
@@ -595,13 +569,11 @@ function selectAnswer(answerIndex) {
   })
 
   if (answerIndex === correctIndex) {
-    // Resposta correta
     answerButtons[answerIndex].classList.add("bg-green-200", "border-green-500", "correct-answer")
 
-    // Calcular pontos baseado no tempo e nível
     let points = 10 * currentLevel * multiplier
     if (responseTime <= 5) {
-      points *= 2 // Bônus de velocidade
+      points *= 2 
       checkAchievement("speedDemon")
     }
 
@@ -609,33 +581,27 @@ function selectAnswer(answerIndex) {
     streak++
     levelProgress += 10
 
-    // Atualizar multiplicador baseado na sequência
     multiplier = Math.min(Math.floor(streak / 3) + 1, 5)
 
-    // Mostrar feedback positivo
     const messages = ["🎉 Correto!", "✨ Excelente!", "🔥 Perfeito!", "⭐ Incrível!", "💎 Fantástico!"]
     feedbackElement.textContent = messages[Math.floor(Math.random() * messages.length)]
     feedbackElement.className = "text-green-600 bounce-animation"
 
-    // Verificar conquistas
     checkAchievement("firstWin")
     if (streak === 5) checkAchievement("streak5")
     if (streak === 10) checkAchievement("streak10")
     if (score >= 1000) checkAchievement("scholar")
     if (score >= 5000) checkAchievement("master")
 
-    // Efeitos visuais
     createCelebrationParticles()
     if (streak > 2) showComboText(`${streak}x COMBO!`)
   } else {
-    // Resposta incorreta
     answerButtons[answerIndex].classList.add("bg-red-200", "border-red-500", "wrong-answer")
     answerButtons[correctIndex].classList.add("bg-green-200", "border-green-500")
 
     feedbackElement.textContent = `❌ Incorreto! A resposta correta é: ${currentQuestions[currentQuestionIndex].answers[correctIndex]}`
     feedbackElement.className = "text-red-600 shake-animation"
 
-    // Perder vida e resetar streak
     loseLife()
     streak = 0
     multiplier = 1
@@ -662,19 +628,15 @@ function nextQuestion() {
 
 function checkLevelUp() {
   if (lives > 0 && currentLevel < maxLevel) {
-    // Subir de nível
     currentLevel++
 
-    // Verificar conquistas de nível
     if (currentLevel === 5) checkAchievement("level5")
     if (currentLevel === 10) checkAchievement("level10")
 
-    // Atualizar nível da matéria na tela principal
     const subjectLevelElement = document.getElementById(`${currentSubject}-level`)
     subjectLevelElement.textContent = currentLevel
     updateProgressDisplay()
 
-    // Mostrar modal de level up
     showLevelUpModal()
   } else {
     endGame()
@@ -686,7 +648,6 @@ function showLevelUpModal() {
   document.getElementById("new-level-description").textContent = levelDescriptions[currentLevel] || "Desconhecido"
   levelUpModal.classList.remove("hidden")
 
-  // Efeitos visuais
   createCelebrationParticles()
   playLevelUpAnimation()
 }
@@ -694,23 +655,20 @@ function showLevelUpModal() {
 function continueToNextLevel() {
   levelUpModal.classList.add("hidden")
 
-  // Preparar perguntas do novo nível
   const levelQuestions = questionDatabase[currentSubject][currentLevel]
   if (levelQuestions && currentLevel <= maxLevel) {
     currentQuestions = shuffleArray(levelQuestions).slice(0, questionsPerLevel)
     currentQuestionIndex = 0
     questionsAnswered = 0
-    lives = Math.min(lives + 1, 5) // Recuperar uma vida
+    lives = Math.min(lives + 1, 5) 
     updateGameUI()
     loadQuestion()
   } else {
-    // Chegou ao nível máximo ou não há mais perguntas
     endGame()
   }
 }
 
 function endGame() {
-  // Atualizar recordes
   const bestScore = Number.parseInt(document.getElementById("best-score").textContent)
   const maxLevel = Number.parseInt(document.getElementById("max-level").textContent)
 
@@ -722,23 +680,19 @@ function endGame() {
     document.getElementById("max-level").textContent = currentLevel
   }
 
-  // Atualizar nível da matéria
   const subjectLevelElement = document.getElementById(`${currentSubject}-level`)
   const currentSubjectLevel = Number.parseInt(subjectLevelElement.textContent)
   if (currentLevel > currentSubjectLevel) {
     subjectLevelElement.textContent = currentLevel
   }
 
-  // Salvar progresso
   saveProgress()
   updateProgressDisplay()
 
-  // Configurar modal de fim de jogo
   document.getElementById("final-score").textContent = score
   document.getElementById("final-level").textContent = currentLevel
   document.getElementById("final-streak").textContent = streak
 
-  // Verificar se desbloqueou novas conquistas
   const newAchievements = checkNewAchievements()
   if (newAchievements.length > 0) {
     document.getElementById("new-achievements").classList.remove("hidden")
@@ -747,7 +701,6 @@ function endGame() {
       .join("<br>")
   }
 
-  // Mostrar modal apropriado
   if (lives <= 0) {
     document.getElementById("game-over-icon").textContent = "😔"
     document.getElementById("game-over-title").textContent = "Game Over!"
@@ -760,7 +713,6 @@ function endGame() {
   renderAchievements()
 }
 
-// Sistema de conquistas
 function checkAchievement(achievementId) {
   if (!achievements[achievementId].unlocked) {
     achievements[achievementId].unlocked = true
@@ -780,7 +732,6 @@ function checkNewAchievements() {
 }
 
 function showAchievementNotification(achievement) {
-  // Criar notificação de conquista
   const notification = document.createElement("div")
   notification.className =
     "fixed top-4 right-4 bg-yellow-400 text-yellow-900 px-6 py-3 rounded-lg shadow-lg z-50 bounce-animation"
@@ -824,7 +775,6 @@ function renderAchievements() {
   })
 }
 
-// Efeitos visuais
 function createCelebrationParticles() {
   const colors = ["#f59e0b", "#10b981", "#3b82f6", "#ef4444", "#8b5cf6"]
   const particlesContainer = document.getElementById("celebration-particles")
@@ -863,7 +813,6 @@ function showComboText(text) {
 }
 
 function playLevelUpAnimation() {
-  // Adicionar classe de animação ao modal
   const modal = levelUpModal.querySelector("div")
   modal.classList.add("level-up-animation")
 
@@ -872,7 +821,6 @@ function playLevelUpAnimation() {
   }, 800)
 }
 
-// Event Listeners
 nextButton.addEventListener("click", () => {
   currentQuestionIndex++
   loadQuestion()
@@ -920,11 +868,9 @@ function fallbackShare(text) {
   }
 }
 
-// Atalhos de teclado
 document.addEventListener("keydown", (e) => {
   if (document.getElementById("quiz-game").classList.contains("hidden")) return
 
-  // Números 1-4 para selecionar respostas
   if (e.key >= "1" && e.key <= "4") {
     const answerButtons = document.querySelectorAll(".answer-btn:not([disabled])")
     const index = Number.parseInt(e.key) - 1
@@ -933,20 +879,16 @@ document.addEventListener("keydown", (e) => {
     }
   }
 
-  // Enter para próxima pergunta
   if (e.key === "Enter" && !nextButton.classList.contains("hidden")) {
     nextButton.click()
   }
 
-  // Escape para voltar ao menu
   if (e.key === "Escape") {
     backToSubjects()
   }
 })
 
-// Responsividade aprimorada
 window.addEventListener("resize", () => {
-  // Ajustar layout para dispositivos móveis
   if (window.innerWidth < 768) {
     document.querySelectorAll(".answer-btn").forEach((btn) => {
       btn.classList.add("text-sm", "py-3")
@@ -958,7 +900,6 @@ window.addEventListener("resize", () => {
   }
 })
 
-// Prevenção de trapaça (desabilitar ferramentas de desenvolvedor em produção)
 if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
   document.addEventListener("keydown", (e) => {
     if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
@@ -973,7 +914,6 @@ if (window.location.hostname !== "localhost" && window.location.hostname !== "12
   })
 }
 
-// Função para atualizar footer do quiz
 function updateQuizFooter() {
   const footerLevel = document.getElementById("footer-current-level")
   const footerSubject = document.getElementById("footer-current-subject")
@@ -989,7 +929,6 @@ function updateQuizFooter() {
   }
 }
 
-// Função para animar as barras de progresso
 function animateProgressBars() {
   const subjects = ["math", "science", "geography"]
   subjects.forEach((subject, index) => {
